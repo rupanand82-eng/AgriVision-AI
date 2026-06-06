@@ -271,6 +271,7 @@ function AuthPortal() {
   const [name, setName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
+  const [copiedDomain, setCopiedDomain] = useState(false);
 
   const handleCredentialSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -416,8 +417,43 @@ function AuthPortal() {
             )}
 
             {errorMsg && (
-              <div className="text-xs text-rose-600 bg-rose-50 border border-rose-100 p-3 rounded-xl">
-                {errorMsg}
+              <div className="text-xs text-rose-700 bg-rose-50 border border-rose-100 p-4 rounded-xl space-y-2.5">
+                {errorMsg.includes('auth/unauthorized-domain') ? (
+                  <div className="space-y-2 text-left">
+                    <p className="font-bold text-rose-800">🔐 Firebase Domain Authorization Required</p>
+                    <p className="text-[11px] leading-relaxed text-rose-600">
+                      Your Firebase project (<code className="font-mono bg-rose-100 px-1 py-0.5 rounded text-rose-800">agri-e98b2</code>) has blocked this domain from running Authentication. You need to white-list this URL.
+                    </p>
+                    <div className="font-mono text-[10px] bg-white border border-rose-100 p-2.5 rounded-xl space-y-1.5 mt-1.5 shadow-sm">
+                      <div className="flex justify-between items-center text-slate-400">
+                        <span>DOMAIN TO AUTHORIZE:</span>
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(window.location.host);
+                            setCopiedDomain(true);
+                            setTimeout(() => setCopiedDomain(false), 2000);
+                          }}
+                          className="text-emerald-600 hover:text-emerald-700 font-sans font-semibold cursor-pointer"
+                        >
+                          {copiedDomain ? "✓ Copied" : "Copy"}
+                        </button>
+                      </div>
+                      <div className="font-bold text-slate-700 tracking-tight text-xs font-mono select-all bg-slate-50 p-1.5 rounded border border-slate-100 break-all">{window.location.host}</div>
+                    </div>
+                    <div className="text-[11px] space-y-1.5 text-slate-600 leading-relaxed pt-1.5 border-t border-rose-100/55 mt-2">
+                      <p className="font-bold text-slate-700 font-sans">How to authorize in 30 seconds:</p>
+                      <ol className="list-decimal pl-4 space-y-1.5 text-slate-600 font-sans">
+                        <li>Go to the <a href="https://console.firebase.google.com/" target="_blank" rel="noreferrer" className="text-emerald-600 hover:underline font-bold inline-flex items-center gap-0.5">Firebase Console</a>.</li>
+                        <li>Open your project <strong className="text-slate-800">agri-e98b2</strong>.</li>
+                        <li>Click <strong>Build &gt; Authentication</strong> &gt; <strong>Settings</strong> &gt; <strong>Authorized domains</strong>.</li>
+                        <li>Click <strong>Add domain</strong> and paste <code className="font-mono bg-slate-100 px-1 py-0.5 rounded">{window.location.host}</code>.</li>
+                      </ol>
+                    </div>
+                  </div>
+                ) : (
+                  <span>{errorMsg}</span>
+                )}
               </div>
             )}
 

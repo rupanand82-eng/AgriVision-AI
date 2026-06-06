@@ -70,16 +70,20 @@ export const DashboardOverview: React.FC<OverviewProps> = ({ onTabChange }) => {
         // Recent analyses list
         const recentQuery = query(
           collection(db, "crop_analysis"), 
-          where("userId", "==", user.uid),
-          orderBy("createdAt", "desc"),
-          limit(5)
+          where("userId", "==", user.uid)
         );
         const recentSnap = await getDocs(recentQuery).catch(err => handleFirestoreError(err, OperationType.LIST, "crop_analysis"));
         const recentData = recentSnap.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
         }));
-        setRecentAnalyses(recentData);
+        // Sort in memory by createdAt descending
+        recentData.sort((a: any, b: any) => {
+          const timeA = a.createdAt?.seconds !== undefined ? a.createdAt.seconds : (a.createdAt ? new Date(a.createdAt).getTime() : 0);
+          const timeB = b.createdAt?.seconds !== undefined ? b.createdAt.seconds : (b.createdAt ? new Date(b.createdAt).getTime() : 0);
+          return timeB - timeA;
+        });
+        setRecentAnalyses(recentData.slice(0, 5));
 
       } catch (err) {
         console.error("Failed to load dashboard statistics:", err);

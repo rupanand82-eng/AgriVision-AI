@@ -45,22 +45,31 @@ export const AIChatBot: React.FC = () => {
     try {
       const q = query(
         collection(db, "ai_chats"), 
-        where("userId", "==", user.uid),
-        orderBy("createdAt", "asc")
+        where("userId", "==", user.uid)
       );
       const snap = await getDocs(q).catch(err => handleFirestoreError(err, OperationType.LIST, "ai_chats"));
       
+      const docsData: any[] = snap.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      // Sort in memory by createdAt ascending
+      docsData.sort((a: any, b: any) => {
+        const timeA = a.createdAt?.seconds !== undefined ? a.createdAt.seconds : (a.createdAt ? new Date(a.createdAt).getTime() : 0);
+        const timeB = b.createdAt?.seconds !== undefined ? b.createdAt.seconds : (b.createdAt ? new Date(b.createdAt).getTime() : 0);
+        return timeA - timeB;
+      });
+
       const loadedMessages: ChatMessage[] = [];
-      snap.docs.forEach(doc => {
-        const data = doc.data();
+      docsData.forEach(data => {
         loadedMessages.push({
-          id: doc.id + "-q",
+          id: data.id + "-q",
           role: 'user',
           text: data.question,
           createdAt: data.createdAt
         });
         loadedMessages.push({
-          id: doc.id + "-r",
+          id: data.id + "-r",
           role: 'bot',
           text: data.response,
           createdAt: data.createdAt

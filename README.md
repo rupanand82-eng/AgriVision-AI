@@ -110,4 +110,38 @@ Deploying AgriVision AI to Vercel is streamlined and fully configured. Because o
 
 4. **That's it!** Your app is now live under a secure, serverless `.vercel.app` domain. Enjoy real-time, global-scale diagnostic intelligence.
 
+---
+
+## 🔐 Troubleshooting: Firebase Unauthorized Domain Error
+
+If you see an error saying **`Firebase: Error (auth/unauthorized-domain)`** when trying to register or sign in:
+
+### Why this happens
+By default, Firebase Authentication restricts authorization requests to safe-listed domains. Since you are using a custom Firebase project (`agri-e98b2`) with this applet interface, you must explicitly whitelist the host domains where this application runs:
+1. **Google AI Studio Development URL** (for live preview and coding sessions).
+2. **Google AI Studio Shared/Preview URL** (for sharing with colleagues).
+3. **Vercel Domain** (e.g., `agri-vision-ai-five.vercel.app` for production).
+
+### How to resolve it in 3 steps:
+
+1. **Open Firebase Console**:
+   - Go to the [Firebase Console](https://console.firebase.google.com/).
+   - Select your custom project: **`agri-e98b2`**.
+
+2. **Navigate to Authorized Domains**:
+   - In the left-hand navigation rail, click **Build** > **Authentication**.
+   - Navigate to the **Settings** tab at the top.
+   - Click on **Authorized domains** under the list of options.
+
+3. **Add your domains**:
+   - Click **Add domain** for each of the following host domains *(enter only the domain name, omitting the `https://` prefix or any trailing paths)*:
+     - `localhost`
+     - `ais-dev-75xv4gvhhf6fbfpyg6pi2i-372504018832.asia-southeast1.run.app`
+     - `ais-pre-75xv4gvhhf6fbfpyg6pi2i-372504018832.asia-southeast1.run.app`
+     - `agri-vision-ai-five.vercel.app`
+   - Click **Add** for each.
+
+*Once added, the change takes effect almost immediately. Refresh your app pages, and authentication/registration will succeed!*
+
+
 

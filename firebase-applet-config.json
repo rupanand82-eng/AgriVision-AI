@@ -1,10 +1,10 @@
 {
-  "projectId": "gen-lang-client-0244298834",
-  "appId": "1:1089080524105:web:02342af025aab6e50fae98",
-  "apiKey": "AIzaSyDahQc-YznIiCZ78ykE9MNNw1u5fk2bor4",
-  "authDomain": "gen-lang-client-0244298834.firebaseapp.com",
-  "firestoreDatabaseId": "ai-studio-10f3d8c8-22b4-4c1e-a406-acef9442d829",
-  "storageBucket": "gen-lang-client-0244298834.firebasestorage.app",
-  "messagingSenderId": "1089080524105",
-  "measurementId": ""
+  "projectId": "agri-e98b2",
+  "appId": "1:1004316900623:web:6d0ec7d7cdf5599691127a",
+  "apiKey": "AIzaSyAcd_lG81YHw30-QdafF9L_hBsth6ebvNA",
+  "authDomain": "agri-e98b2.firebaseapp.com",
+  "firestoreDatabaseId": "(default)",
+  "storageBucket": "agri-e98b2.firebasestorage.app",
+  "messagingSenderId": "1004316900623",
+  "measurementId": "G-DN16ZR2WV2"
 }
