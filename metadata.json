@@ -1,0 +1,8 @@
+{
+  "name": "Remix: AgriVision AI",
+  "description": "Full-Stack AI Agriculture \u0026 Environment Intelligence Platform for plant disease detection, soil analysis, smart irrigation, and weather insights.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

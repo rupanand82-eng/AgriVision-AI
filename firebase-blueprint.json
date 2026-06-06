@@ -1,0 +1,121 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique user ID" },
+        "name": { "type": "string", "description": "User display name" },
+        "email": { "type": "string", "description": "User email address" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of creation" }
+      },
+      "required": ["id", "email"]
+    },
+    "CropAnalysis": {
+      "title": "Crop Analysis",
+      "description": "AI-detected crop disease and recommendations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Analysis document ID" },
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "cropName": { "type": "string", "description": "Crop name analyzed" },
+        "imageUrl": { "type": "string", "description": "URL of crop leaf photo" },
+        "diseaseName": { "type": "string", "description": "AI-detected disease name" },
+        "confidence": { "type": "number", "description": "Detection confidence percentage" },
+        "symptoms": { "type": "string", "description": "Symptoms of the disease" },
+        "treatment": { "type": "string", "description": "Recommended treatment details" },
+        "prevention": { "type": "string", "description": "Prevention tips" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of analysis" }
+      },
+      "required": ["id", "userId", "cropName", "diseaseName", "confidence", "createdAt"]
+    },
+    "SoilReport": {
+      "title": "Soil Report",
+      "description": "AI recommendations based on soil parameters",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Report ID" },
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "soilType": { "type": "string", "description": "Type of soil" },
+        "ph": { "type": "number", "description": "pH level" },
+        "moisture": { "type": "number", "description": "Moisture percentage" },
+        "location": { "type": "string", "description": "Location coordinates or description" },
+        "suitableCrops": { "type": "string", "description": "Crops suggested by AI" },
+        "fertilizerRecommendations": { "type": "string", "description": "Fertilizers suggested by AI" },
+        "soilImprovementPlan": { "type": "string", "description": "Soil correction tactics" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp of report" }
+      },
+      "required": ["id", "userId", "soilType", "ph", "moisture", "createdAt"]
+    },
+    "WeatherReport": {
+      "title": "Weather Report",
+      "description": "Weather summary and AI agronomic advisory",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Report ID" },
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "location": { "type": "string", "description": "Advisory location" },
+        "weatherData": { "type": "object", "description": "Parsed dynamic weather data metrics and metrics object" },
+        "advisory": { "type": "string", "description": "AI weather-based farming advice" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Advisory creation timestamp" }
+      },
+      "required": ["id", "userId", "location", "weatherData", "advisory", "createdAt"]
+    },
+    "AIChat": {
+      "title": "AI Chat",
+      "description": "Conversation log with AgriBot AI assistant",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Message log ID" },
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "question": { "type": "string", "description": "Farmer question" },
+        "response": { "type": "string", "description": "AgriBot response" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Response timestamp" }
+      },
+      "required": ["id", "userId", "question", "response", "createdAt"]
+    },
+    "EnvReport": {
+      "title": "Environmental Report",
+      "description": "Environmental metric evaluation and AI-suggested recommendations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Report ID" },
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "airQuality": { "type": "string", "description": "Air Quality description or index" },
+        "waterQuality": { "type": "string", "description": "Water chemical/microbiological health" },
+        "pollutionLevel": { "type": "string", "description": "Pollutant assessment index" },
+        "insights": { "type": "string", "description": "AI analysis comments" },
+        "recommendations": { "type": "string", "description": "Sustainability practices" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Reporting timestamp" }
+      },
+      "required": ["id", "userId", "airQuality", "waterQuality", "pollutionLevel", "insights", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Main user details lookup"
+    },
+    "/crop_analysis/{analysisId}": {
+      "schema": "CropAnalysis",
+      "description": "Crop leaves visual and physical disease diagnosis logs"
+    },
+    "/soil_reports/{reportId}": {
+      "schema": "SoilReport",
+      "description": "Soil parameter reports and fertilizer schemes"
+    },
+    "/weather_reports/{reportId}": {
+      "schema": "WeatherReport",
+      "description": "Agrometeorological conditions and advisory reports"
+    },
+    "/ai_chats/{chatId}": {
+      "schema": "AIChat",
+      "description": "Chat log registry for chatbot history"
+    },
+    "/env_reports/{reportId}": {
+      "schema": "EnvReport",
+      "description": "Microclimate chemical index metrics and sustainable methods"
+    }
+  }
+}

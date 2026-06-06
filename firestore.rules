@@ -1,0 +1,105 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reuseable global helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // 1. Users profile
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId)
+        && incoming().id == userId
+        && incoming().email is string
+        && incoming().email.size() <= 256
+        && incoming().createdAt == request.time;
+      allow update: if isOwner(userId)
+        && incoming().id == userId
+        && incoming().email == existing().email
+        && (incoming().diff(existing()).affectedKeys().hasOnly(['name']));
+    }
+
+    // 2. Crop analysis reports
+    match /crop_analysis/{analysisId} {
+      allow read, list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn()
+        && incoming().userId == request.auth.uid
+        && incoming().cropName is string && incoming().cropName.size() <= 128
+        && incoming().diseaseName is string && incoming().diseaseName.size() <= 128
+        && incoming().confidence is number
+        && incoming().confidence >= 0 && incoming().confidence <= 100
+        && incoming().createdAt == request.time;
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow update: if false;
+    }
+
+    // 3. Soil health reports
+    match /soil_reports/{reportId} {
+      allow read, list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn()
+        && incoming().userId == request.auth.uid
+        && incoming().soilType is string && incoming().soilType.size() <= 128
+        && incoming().ph is number
+        && incoming().ph >= 0 && incoming().ph <= 14
+        && incoming().moisture is number
+        && incoming().moisture >= 0 && incoming().moisture <= 100
+        && incoming().createdAt == request.time;
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow update: if false;
+    }
+
+    // 4. Weather reports and AI advisory logs
+    match /weather_reports/{reportId} {
+      allow read, list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn()
+        && incoming().userId == request.auth.uid
+        && incoming().location is string && incoming().location.size() <= 128
+        && incoming().createdAt == request.time;
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow update: if false;
+    }
+
+    // 5. Chat conversations logs
+    match /ai_chats/{chatId} {
+      allow read, list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn()
+        && incoming().userId == request.auth.uid
+        && incoming().question is string && incoming().question.size() <= 5000
+        && incoming().response is string && incoming().response.size() <= 10000
+        && incoming().createdAt == request.time;
+      allow update, delete: if false;
+    }
+
+    // 6. Environment reports
+    match /env_reports/{reportId} {
+      allow read, list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn()
+        && incoming().userId == request.auth.uid
+        && incoming().airQuality is string && incoming().airQuality.size() <= 128
+        && incoming().waterQuality is string && incoming().waterQuality.size() <= 128
+        && incoming().pollutionLevel is string && incoming().pollutionLevel.size() <= 128
+        && incoming().createdAt == request.time;
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow update: if false;
+    }
+  }
+}
